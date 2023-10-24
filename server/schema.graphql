@@ -1,0 +1,45 @@
+type Query {
+  page(environment: String!, channel: String!, path: String!, segments: [String], token: String): Page
+}
+
+scalar JSON
+
+type Page {
+  model: JSON
+  preview: Boolean!
+  path: String!
+  name: String!
+  channel: JSON
+  data: JSON
+  containers: [Container]
+  menus: [Menu]
+}
+
+type Image {
+ id: String!
+ src: String!
+}
+
+type Menu {
+  name: String!
+  items: [MenuItem]
+}
+
+type MenuItem {
+  name: String!
+  expanded: Boolean!
+  selected: Boolean!
+  href: String
+  items: [MenuItem]
+}
+
+type Container {
+  name: String!
+  components: [Component]
+}
+
+type Component {
+  name: String!
+  content: JSON
+  properties: JSON
+}
