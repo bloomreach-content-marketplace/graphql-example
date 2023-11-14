@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN npm install
 
-EXPOSE 4000
+EXPOSE 9000
 
 ENTRYPOINT ["npm", "run"]
 CMD ["start"]
