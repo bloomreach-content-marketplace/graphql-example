@@ -15,6 +15,10 @@ export type Scalars = {
   JSON: any;
 };
 
+export type Channel = {
+  name: Scalars['String'];
+};
+
 export type Component = {
   content?: Maybe<Scalars['JSON']>;
   name: Scalars['String'];
@@ -48,6 +52,7 @@ export type Page = {
   channel?: Maybe<Scalars['JSON']>;
   containers?: Maybe<Array<Maybe<Container>>>;
   data?: Maybe<Scalars['JSON']>;
+  layout?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Maybe<Menu>>>;
   model?: Maybe<Scalars['JSON']>;
   name: Scalars['String'];
@@ -56,7 +61,13 @@ export type Page = {
 };
 
 export type Query = {
+  channels?: Maybe<Array<Maybe<Channel>>>;
   page?: Maybe<Page>;
+};
+
+
+export type QueryChannelsArgs = {
+  environment: Scalars['String'];
 };
 
 
@@ -140,6 +151,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  Channel: ResolverTypeWrapper<Channel>;
   Component: ResolverTypeWrapper<Component>;
   Container: ResolverTypeWrapper<Container>;
   Image: ResolverTypeWrapper<Image>;
@@ -154,6 +166,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
+  Channel: Channel;
   Component: Component;
   Container: Container;
   Image: Image;
@@ -163,6 +176,11 @@ export type ResolversParentTypes = {
   Page: Page;
   Query: {};
   String: Scalars['String'];
+};
+
+export type ChannelResolvers<ContextType = any, ParentType extends ResolversParentTypes['Channel'] = ResolversParentTypes['Channel']> = {
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ComponentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Component'] = ResolversParentTypes['Component']> = {
@@ -207,6 +225,7 @@ export type PageResolvers<ContextType = any, ParentType extends ResolversParentT
   channel?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   containers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Container']>>>, ParentType, ContextType>;
   data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  layout?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   menus?: Resolver<Maybe<Array<Maybe<ResolversTypes['Menu']>>>, ParentType, ContextType>;
   model?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -216,10 +235,12 @@ export type PageResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  channels?: Resolver<Maybe<Array<Maybe<ResolversTypes['Channel']>>>, ParentType, ContextType, RequireFields<QueryChannelsArgs, 'environment'>>;
   page?: Resolver<Maybe<ResolversTypes['Page']>, ParentType, ContextType, RequireFields<QueryPageArgs, 'channel' | 'environment' | 'path'>>;
 };
 
 export type Resolvers<ContextType = any> = {
+  Channel?: ChannelResolvers<ContextType>;
   Component?: ComponentResolvers<ContextType>;
   Container?: ContainerResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;

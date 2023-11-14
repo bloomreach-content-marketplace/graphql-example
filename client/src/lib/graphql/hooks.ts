@@ -1,7 +1,7 @@
 import {useQuery} from '@apollo/client';
 import {pageQuery} from './queries';
 
-export function usePage(environment: string, channel: string, path: string) {
+export function usePage(environment: string, channel: string, path: string, segments?: []) {
     const {data, loading, error} = useQuery(pageQuery, {
         variables: {environment, channel, path},
     });

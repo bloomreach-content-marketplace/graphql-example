@@ -13,10 +13,14 @@ export const resolvers: Resolvers = {
     Query: {
         page: async (_root, {environment, channel, path, segments, token}) => {
 
+            // const segs: string[] = segments as [string]
+
             let page: Page
+            const parsedPath = path ?? '/';
+            // const parsedSegments = segments && `__br__segmentIds=${segs.map()}`
             try {
                 page = await initialize({
-                    path: path ?? '/',
+                    path: parsedPath,
                     endpoint: `https://${environment}.bloomreach.io/delivery/site/v1/channels/${channel}/pages`,
                     httpClient: axios,
                     // debug: true
@@ -29,9 +33,12 @@ export const resolvers: Resolvers = {
                 throw notFoundError("no page object found")
             }
 
-
             //@ts-ignore
-            const documentModel = page.getDocument()?.model?.data
+            const documentModel = {...page.getDocument()?.model?.data, _links: page.getDocument()?.model?.links}
+            if (documentModel) {
+                delete documentModel.name
+                delete documentModel.displayName
+            }
 
             const rootComponent = page?.getComponent()
             //@ts-ignore
@@ -43,9 +50,10 @@ export const resolvers: Resolvers = {
                 //@ts-ignore
                 model: page?.model,
                 preview: page.isPreview(),
+                layout: rootComponent.getName(),
                 //@ts-ignore
                 name: `${getComponentName(rootComponent)}`,
-                path: path,
+                path: parsedPath,
                 data: documentModel,
                 channel: page.getChannelParameters(),
                 menus: menus.map((menu: Menu) => {
@@ -89,7 +97,10 @@ export const resolvers: Resolvers = {
                 })
             };
         },
-
+        channels: async (_root, {environment}) => {
+            const channels = await axios.get(`https://${environment}.bloomreach.io/delivery/site/v1/channels`).then(response => response.data);
+            return channels ?? []
+        }
     }
 };
 

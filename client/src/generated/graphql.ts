@@ -48,6 +48,7 @@ export type Page = {
   channel?: Maybe<Scalars['JSON']>;
   containers?: Maybe<Array<Maybe<Container>>>;
   data?: Maybe<Scalars['JSON']>;
+  layout?: Maybe<Scalars['String']>;
   menus?: Maybe<Array<Maybe<Menu>>>;
   model?: Maybe<Scalars['JSON']>;
   name: Scalars['String'];
