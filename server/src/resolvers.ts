@@ -13,8 +13,6 @@ export const resolvers: Resolvers = {
     Query: {
         page: async (_root, {environment, channel, path, segments, token}) => {
 
-            // const segs: string[] = segments as [string]
-
             let page: Page
             let parsedPath = path ?? '/';
             const endpointPath = `/delivery/site/v1/channels/${channel}/pages`
