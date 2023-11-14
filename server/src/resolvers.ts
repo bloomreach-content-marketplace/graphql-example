@@ -16,8 +16,20 @@ export const resolvers: Resolvers = {
             // const segs: string[] = segments as [string]
 
             let page: Page
-            const parsedPath = path ?? '/';
-            // const parsedSegments = segments && `__br__segmentIds=${segs.map()}`
+            let parsedPath = path ?? '/';
+            const endpointPath = `/delivery/site/v1/channels/${channel}/pages`
+            const endpoint = `https://${environment}.bloomreach.io${endpointPath}`;
+            const url: URL = new URL(`${endpoint}${parsedPath}`);
+
+            if (segments) {
+                url.searchParams.set('__br__segmentIds', segments.join(','))
+            }
+            if (token) {
+                url.searchParams.set('token', token)
+            }
+
+            parsedPath = `${url.pathname.substring(url.pathname.indexOf(endpointPath) + endpointPath.length)}${url.search}`
+
             try {
                 page = await initialize({
                     path: parsedPath,
@@ -26,6 +38,10 @@ export const resolvers: Resolvers = {
                     // debug: true
                 } as Configuration)
             } catch (e) {
+                console.log(e)
+                if (e.response.status == 401) {
+                    throw unauthorizedError(e.response.statusText)
+                }
                 throw notFoundError("no page object found")
             }
 
